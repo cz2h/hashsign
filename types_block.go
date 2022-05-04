@@ -2,8 +2,10 @@ package main
 
 import (
 	"crypto/sha256"
+	"math/rand"
 	"fmt"
 )
+
 
 // BlockFromByteSlice returns a block from a variable length byte slice.
 // Watch out!  Silently ignores potential errors like the slice being too
@@ -14,12 +16,16 @@ func BlockFromByteSlice(by []byte) Block {
 	return bl
 }
 
+func GenrateBlock() Block {
+	var rand_bytes [32]byte
+	rand.Read(rand_bytes[:])
+	return BlockFromByteSlice(rand_bytes[:])
+}
+
 
 // A block of data is always 32 bytes long; we're using sha256 and this
 // is the size of both the output (defined by the hash function) and our inputs
 type Block [32]byte
-
-type Message Block
 
 
 // ToHex returns a hex encoded string of the block data, with no newlines.
