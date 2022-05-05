@@ -155,12 +155,14 @@ func Forge() (string, Signature, error) {
 
 	// your code here!
 	// ==
-	msgInitial := "ihssantinawiforgeitinawi@mit.edu"
+	// This is some magic number pick from github.
+	// "ihssantinawiforgeitinawi@mit.edu643563840"
+	msgInitial := "zzzforgeccchhhh@maybeuoft.ca"
 	msgString := "xox"
 	var sig Signature
-	var maxIterations = 6435638400
+	var maxIterations = 12155410890
 	var successBitscount int
-	for trials := 643563840; msgString == "xox" && trials < maxIterations; trials ++ {
+	for trials := 1215541080; msgString == "xox" && trials < maxIterations; trials ++ {
 		msgString, sig, successBitscount = TryForge(msgInitial, msgslice, sigslice, trials)
 		if msgString != "xox" {
 			fmt.Println("Success at iteration ", trials)
