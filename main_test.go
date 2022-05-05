@@ -29,6 +29,8 @@ func TestGoodSig(t *testing.T) {
 	if !worked {
 		t.Fatalf("Verify returned false, expected true")
 	}
+
+	fmt.Println("TestGoodSig")
 }
 
 // TestBadSig signs, but then modifies the signature by hashing one of the
@@ -65,6 +67,8 @@ func TestBadSig(t *testing.T) {
 	if worked {
 		t.Fatalf("Verify returned true, expected false")
 	}
+
+	fmt.Println("TestBadSig")
 }
 
 // TestGoodMany tests 1000 signatures that all should work.
@@ -85,6 +89,8 @@ func TestGoodMany(t *testing.T) {
 			t.Fatalf("Verify returned false, expected true")
 		}
 	}
+
+	fmt.Println("TestGoodMany")
 }
 
 // TestBadMany tests 1000 signatures, modifying all of them so that they should
@@ -107,4 +113,6 @@ func TestBadMany(t *testing.T) {
 			t.Fatalf("Verify returned true, expected false")
 		}
 	}
+
+	fmt.Println("TestBadMany")
 }

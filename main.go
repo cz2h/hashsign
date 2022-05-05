@@ -129,6 +129,8 @@ func Sign(msg Message, sec SecretKey) Signature {
 
 // Verify takes a message, public key and signature, and returns a boolean
 // describing the validity of the signature.
+// If msg, pub. sig are made in the same endianess, then verify will work correctly.
+// 
 func Verify(msg Message, pub PublicKey, sig Signature) bool {
 
 	// Your code here

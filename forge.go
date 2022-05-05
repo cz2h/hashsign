@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+import "strconv"
 
 /*
 A note about the provided keys and signatures:
@@ -57,6 +58,35 @@ endian encoding described here.
 
 */
 
+func TryForge(msginit string, msgslice []Message, sigslice []Signature, counter int) (string, Signature, int) {
+	var sig Signature
+	msgstring := msginit + strconv.Itoa(counter)
+	// The hash is endian-agnostic.
+	var msgHash = GetMessageFromString(msgstring)
+	successBitscount := 0
+	
+	for i := 0; i < 256; i ++ {
+		var curBit = msgHash[i / 8] >> (7 - i % 8) & 0x01
+		var forgeBitSuccess = false
+
+		for k := 0; k < len(msgslice); k ++ {
+			var compareBit = msgslice[k][i / 8] >> (7 - i % 8) & 0x01
+			if compareBit == curBit {
+				forgeBitSuccess = true
+				sig.Preimage[i] = sigslice[k].Preimage[i]
+				successBitscount += 1
+				continue
+			}
+		}
+
+		if ! forgeBitSuccess {
+			return "xox", sig, successBitscount
+		}
+	}
+
+	return msgstring, sig, successBitscount
+}
+
 // Forge is the forgery function, to be filled in and completed.  This is a trickier
 // part of the assignment which will require the computer to do a bit of work.
 // It's possible for a single core or single thread to complete this in a reasonable
@@ -101,6 +131,9 @@ func Forge() (string, Signature, error) {
 		panic(err)
 	}
 
+	// The sigslice and msgslice are stored in big endian.
+	// My macbook uses small endian.
+	// May want to convert between endianess.
 	var sigslice []Signature
 	sigslice = append(sigslice, sig1)
 	sigslice = append(sigslice, sig2)
@@ -119,11 +152,23 @@ func Forge() (string, Signature, error) {
 	fmt.Printf("ok 3: %v\n", Verify(msgslice[2], pub, sig3))
 	fmt.Printf("ok 4: %v\n", Verify(msgslice[3], pub, sig4))
 
-	msgString := "my forged message"
-	var sig Signature
 
 	// your code here!
 	// ==
+	msgInitial := "ihssantinawiforgeitinawi@mit.edu"
+	msgString := "xox"
+	var sig Signature
+	var maxIterations = 6435638400
+	var successBitscount int
+	for trials := 643563840; msgString == "xox" && trials < maxIterations; trials ++ {
+		msgString, sig, successBitscount = TryForge(msgInitial, msgslice, sigslice, trials)
+		if msgString != "xox" {
+			fmt.Println("Success at iteration ", trials)
+		}
+		if trials % 1000000000 == 0 {
+			fmt.Println(trials, successBitscount)
+		}
+	}
 	// Geordi La
 	// ==
 
