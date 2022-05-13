@@ -158,23 +158,35 @@ func Forge() (string, Signature, error) {
 	// This is some magic number pick from github.
 	// "ihssantinawiforgeitinawi@mit.edu643563840"
 	msgInitial := "zzzforgeccchhhh@maybeuoft.ca"
-	msgString := "xox"
-	var sig Signature
 	var maxIterations = 12155410890
-	var successBitscount int
-	for trials := 1215541080; msgString == "xox" && trials < maxIterations; trials ++ {
-		msgString, sig, successBitscount = TryForge(msgInitial, msgslice, sigslice, trials)
-		if msgString != "xox" {
-			fmt.Println("Success at iteration ", trials)
-		}
-		if trials % 1000000000 == 0 {
-			fmt.Println(trials, successBitscount)
-		}
+	msgChannel := make(chan string)
+	sigChannel := make(chan Signature)
+
+	for routineId := 0; routineId < 4; routineId ++ {
+		// Use of multi thread to speed up.
+		go func (id int) {
+			fmt.Println("Channel id: ", id)
+			// These are variables within scope of each channel, so will not get overwrittien by each other channel.
+			var tryoutStr = "xox"
+			var tryoutSig Signature
+			// magic number is 215541089
+			for trials := 215500000; tryoutStr == "xox" && trials < maxIterations; trials ++ {
+				msgPassed := msgInitial + strconv.Itoa(id)
+				tryoutStr, tryoutSig, _ = TryForge(msgPassed, msgslice, sigslice, trials)
+				if tryoutStr != "xox" {
+					fmt.Println("Channel  ", id, " success at ", trials)
+					msgChannel <- tryoutStr
+					sigChannel <- tryoutSig
+				}
+			}
+		}(routineId)
 	}
+
+	outputStr  := <- msgChannel
+	outputSig := <- sigChannel
 	// Geordi La
 	// ==
-
-	return msgString, sig, nil
+	return outputStr, outputSig, nil
 
 }
 

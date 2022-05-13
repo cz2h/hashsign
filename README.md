@@ -65,3 +65,6 @@ $ go test -timeout 30m
 to timeout after 30 minutes instead of 10.
 
 ## Submission
+Here are test results:
+Channel   1  success at  215541089
+Channel   0  success at  71485194
