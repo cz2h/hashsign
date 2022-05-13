@@ -1,7 +1,7 @@
 # Source
 https://github.com/mit-dci/mas.s62
 
-# Problem Set 1
+# Problem Set 1 (MIT OPEN COURSE MAS.S62 PSET01)
 
 In the first part of this problem set, you'll implement Lamport signatures.  In the second part, you'll take advantage of incorrect usage to forge signatures.
 
